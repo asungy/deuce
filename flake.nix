@@ -15,8 +15,15 @@
         name = "deuce";
       in
       {
-        devShells.default = with pkgs; mkShell {
-          buildInputs = [
+        defaultPackage = pkgs.rustPlatform.buildRustPackage rec {
+          inherit name;
+          cargoLock.lockFile = ./Cargo.lock;
+          src = pkgs.lib.cleanSource ./.;
+        };
+
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            rust-bin.stable.latest.default
             jupyter
           ];
           shellHook = ''
