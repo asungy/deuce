@@ -4,29 +4,20 @@
   inputs = {
     nixpkgs.url      = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url  = "github:numtide/flake-utils";
-    nixvim.url       = "github:nix-community/nixvim";
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
-  outputs = { self, nixpkgs, flake-utils, nixvim, }:
+  outputs = { self, nixpkgs, flake-utils, rust-overlay, }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        overlays = [ (import rust-overlay) ];
+        pkgs = import nixpkgs { inherit system overlays; };
         name = "deuce";
-        pkgs = import nixpkgs { inherit system; };
-        nvim = nixvim.legacyPackages.${system}.makeNixvim {
-          extraPlugins = with pkgs.vimPlugins; [
-            lazy-nvim
-          ];
-          extraConfigLua = ''
-            require("lazy").setup({
-              dir = ".",
-            })
-          '';
-        };
       in
       {
         devShells.default = with pkgs; mkShell {
           buildInputs = [
-            nvim
+            jupyter
           ];
           shellHook = ''
             PS1="\n\[\033[01;32m\]${name}(default) >\[\033[00m\] "

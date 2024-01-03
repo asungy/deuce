@@ -1,0 +1,16 @@
+[package]
+name = "deuce"
+version = "0.0.0"
+edition = "2021"
+
+[[bin]]
+name = "deuce"
+path = "src/bin/deuce/main.rs"
+
+[lib]
+name = "deuce"
+path = "src/deuce/lib.rs"
+
+[dependencies]
+clap = "4.4"
+anyhow = "1.0"
