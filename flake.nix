@@ -17,8 +17,10 @@
       {
         defaultPackage = pkgs.rustPlatform.buildRustPackage rec {
           inherit name;
-          cargoLock.lockFile = ./Cargo.lock;
           src = pkgs.lib.cleanSource ./.;
+
+          cargoLock.lockFile = ./Cargo.lock;
+          cargoBuildFlags = "--release";
         };
 
         devShells.default = pkgs.mkShell {
